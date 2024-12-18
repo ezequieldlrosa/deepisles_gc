@@ -126,7 +126,9 @@ class predict():
             os.makedirs(str(self._algorithm_output_path))
             os.makedirs(str(self._algorithm_output_thumbnail_path))
 
-        output_image_path = (self._algorithm_output_path / input_filename).with_suffix('.nii.gz')
+        output_image_path = (self._algorithm_output_path / input_filename).with_name(
+            f"{Path(input_filename).stem}-msk.nii.gz")
+
         output_thumbnail_path = self._algorithm_output_thumbnail_path / 'output_screenshot.png'
 
         shutil.copyfile(output_msk_path, output_image_path) #copy tmp file to GC required location
