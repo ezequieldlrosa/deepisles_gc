@@ -1,1 +1,1 @@
-Docker algorithm for DeepISLES (grand-challenge) web-service
+Docker algorithm for DeepISLES (grand-challenge) web-service.
