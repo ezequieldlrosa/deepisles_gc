@@ -23,8 +23,6 @@ import json
 from glob import glob
 import shutil
 import SimpleITK
-import numpy
-import torch
 import os
 import tempfile
 from itertools import chain
@@ -37,7 +35,7 @@ from DeepIsles.src.isles22_ensemble import IslesEnsemble
 
 #INPUT_PATH = Path("/input")
 #OUTPUT_PATH = Path("/output")
-#MODEL_PATH = Path("/opt/ml/model")
+MODEL_PATH = Path("/opt/ml/model")
 
 DEFAULT_INPUT_PATH = Path("/input")
 DEFAULT_ALGORITHM_OUTPUT_IMAGES_PATH = Path("/output/images/")
@@ -88,17 +86,17 @@ class predict():
         # predict with deepisles
         stroke_segm = IslesEnsemble()
         deepisles_out_path = tempfile.mkdtemp(prefix="tmp", dir="/tmp")
-
+        weights_dir = os.path.join(str(MODEL_PATH), 'weights')
         stroke_segm.predict_ensemble(ensemble_path=PATH_DEEPISLES,
                                      input_dwi_path=str(dwi_image_path),
                                      input_adc_path=str(adc_image_path),
                                      input_flair_path=str(flair_image_path),
                                      output_path=deepisles_out_path,
-                                     fast=False,
+                                     fast=True, #todo- back to false! just debug
                                      save_team_outputs=False,
                                      skull_strip=skull_strip,
                                      results_mni=False,
-                                     weights_dir=os.path.join(os.getcwd(), 'test', 'opt', 'ml', 'model', 'weights'))
+                                     weights_dir=weights_dir)
 
         output_msk_path = os.path.join(deepisles_out_path, 'lesion_msk.nii.gz')
         output_png_file = os.path.join(deepisles_out_path, 'output_screenshot.png')
@@ -172,9 +170,9 @@ class predict():
         if filetype == 'image':
 
             file_list = list(chain(
-        (self._input_path / "images" / slug).glob("*.mha"),
-                 (self._input_path / "images" / slug).glob("*.nii"),
-                 (self._input_path / "images" / slug).glob("*.nii.gz"),
+        (self._input_path / "images" / slug).glob("*.mha")#,
+#                 (self._input_path / "images" / slug).glob("*.nii"),
+ #                (self._input_path / "images" / slug).glob("*.nii.gz"),
                 )
             )
 
