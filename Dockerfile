@@ -39,7 +39,6 @@ COPY DeepIsles/src/FACTORIZER ./src/FACTORIZER
 COPY DeepIsles/src/HD-BET ./src/HD-BET
 COPY DeepIsles/src/NVAUTO ./src/NVAUTO
 COPY DeepIsles/src/SEALS ./src/SEALS
-COPY DeepIsles/weights ./weights
 COPY DeepIsles/requirements.txt .
 
 # Create a non-root user
