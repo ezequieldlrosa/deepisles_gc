@@ -154,7 +154,7 @@ class predict():
         dwi_image_path = self.get_file_path(slug='dwi-brain-mri', filetype='image')
         adc_image_path = self.get_file_path(slug='adc-brain-mri', filetype='image')
         flair_image_path = self.get_file_path(slug='flair-brain-mri', filetype='image')
-        deepisles_config_path = self.get_file_path(slug='deepisles-settings', filetype='json')
+        deepisles_config_path = self.get_file_path(slug='deepisles_settings', filetype='json')
         #input_data = {'dwi_image': SimpleITK.ReadImage(str(dwi_image_path)), 'dwi_json': json.load(open(dwi_json_path)),
                       # 'adc_image': SimpleITK.ReadImage(str(adc_image_path)), 'adc_json': json.load(open(adc_json_path)),
                       # 'flair_image': SimpleITK.ReadImage(str(flair_image_path)), 'flair_json': json.load(open(flair_json_path))}
