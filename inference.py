@@ -88,6 +88,9 @@ class predict():
         # predict with deepisles
         stroke_segm = IslesEnsemble()
         deepisles_out_path = tempfile.mkdtemp(prefix="tmp", dir="/tmp")
+        print(str(dwi_image_path))
+        print(str(adc_image_path))
+        print(str(flair_image_path))
 
         stroke_segm.predict_ensemble(ensemble_path=PATH_DEEPISLES,
                                      input_dwi_path=str(dwi_image_path),
