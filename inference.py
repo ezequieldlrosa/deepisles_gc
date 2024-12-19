@@ -22,7 +22,7 @@ from pathlib import Path
 import json
 from glob import glob
 import shutil
-import SimpleITK
+import SimpleITK as sitk
 import os
 import tempfile
 from itertools import chain
@@ -86,7 +86,11 @@ class predict():
         # predict with deepisles
         stroke_segm = IslesEnsemble()
         deepisles_out_path = tempfile.mkdtemp(prefix="tmp", dir="/tmp")
-        weights_dir = os.path.join(str(MODEL_PATH), 'weights')
+
+        if self.debug:
+            weights_dir = os.path.join(os.getcwd(), 'test', 'opt', 'ml', 'model', 'weights')
+        else:
+            weights_dir = os.path.join(str(MODEL_PATH), 'weights')
         stroke_segm.predict_ensemble(ensemble_path=PATH_DEEPISLES,
                                      input_dwi_path=str(dwi_image_path),
                                      input_adc_path=str(adc_image_path),
@@ -125,11 +129,15 @@ class predict():
             os.makedirs(str(self._algorithm_output_thumbnail_path))
 
         output_image_path = (self._algorithm_output_path / input_filename).with_name(
-            f"{Path(input_filename).stem}-msk.nii.gz")
+            f"{Path(input_filename).stem}-msk.mha")
 
         output_thumbnail_path = self._algorithm_output_thumbnail_path / 'output_screenshot.png'
 
-        shutil.copyfile(output_msk_path, output_image_path) #copy tmp file to GC required location
+        # export output as .mha
+        image = sitk.ReadImage(output_msk_path)
+        sitk.WriteImage(image, output_image_path)
+
+        #shutil.copyfile(output_msk_path, output_image_path) #copy tmp file to GC required location
         shutil.copyfile(output_png_file, output_thumbnail_path) #copy tmp file to GC required location
 
         # Write segmentation file to json.
