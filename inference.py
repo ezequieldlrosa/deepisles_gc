@@ -84,7 +84,7 @@ class predict():
 
         with open(deepisles_config_path, 'r') as file:
             run_config = json.load(file)  # Parse JSON into a Python dictionary
-        skull_strip = run_config["skull_strip"].lower() == "true"
+        skull_strip = bool(run_config["skull_strip"])
         # predict with deepisles
         stroke_segm = IslesEnsemble()
         deepisles_out_path = tempfile.mkdtemp(prefix="tmp", dir="/tmp")
