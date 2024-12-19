@@ -94,7 +94,12 @@ def convert_to_nii(input_path, tmp_dir, image_mod):
             output_dir_file = os.path.join(output_dir, image_mod+'.nii.gz')
             if not os.path.exists(output_dir):
                 os.makedirs(output_dir)
-            shutil.copyfile(input_path, output_dir_file)
+            if input_path[-4:] == '.mha':
+                image = sitk.ReadImage(input_path)
+                # Write the image as .nii.gz
+                sitk.WriteImage(image, output_dir_file)
+            else:
+                shutil.copyfile(input_path, output_dir_file)
             return output_dir_file, True # flag to indicate dcm/nii
         else:
             raise ValueError("No .nii, .nii.gz, .mha, or Dicom files available.")

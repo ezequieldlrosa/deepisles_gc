@@ -171,11 +171,6 @@ class IslesEnsemble:
             self.input_flair_path, _ = convert_to_nii(self.input_flair_path, self.tmp_out_dir, 'flair')
 
         self.skull_strip = True if not nii_flag else self.skull_strip
-        #todo remove- dbug
-        print(self.input_dwi_path)
-        print(nii_flag)
-        print(self.input_adc_path)
-        print(self.input_flair_path)
 
     def extract_brain(self):
         # Code based on HD-BET
