@@ -60,7 +60,7 @@ class predict():
             self._input_path = input_path
             self._output_path = output_path
             self._algorithm_output_path = self._output_path / 'stroke-lesion-segmentation'
-            self._algorithm_output_thumbnail_path = self._output_path /'stroke-lesion-segmentation-thumbnail'
+            self._algorithm_output_thumbnail_path = self._output_path /'stroke-lesion-segmentation-thumbnail.png'
 
             self._output_file = DEFAULT_ALGORITHM_OUTPUT_FILE_PATH
             self._case_results = []
