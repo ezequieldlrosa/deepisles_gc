@@ -96,7 +96,7 @@ class predict():
                                      input_adc_path=str(adc_image_path),
                                      input_flair_path=str(flair_image_path),
                                      output_path=deepisles_out_path,
-                                     fast=True, #todo- back to false! just debug
+                                     fast=False,
                                      save_team_outputs=False,
                                      skull_strip=skull_strip,
                                      results_mni=False,
@@ -135,7 +135,7 @@ class predict():
 
         # export output as .mha
         image = sitk.ReadImage(output_msk_path)
-        sitk.WriteImage(image, output_image_path)
+        sitk.WriteImage(image, str(output_image_path))
 
         #shutil.copyfile(output_msk_path, output_image_path) #copy tmp file to GC required location
         shutil.copyfile(output_png_file, output_thumbnail_path) #copy tmp file to GC required location
