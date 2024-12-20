@@ -138,14 +138,14 @@ class predict():
         sitk.WriteImage(image, str(output_image_path))
 
         #shutil.copyfile(output_msk_path, output_image_path) #copy tmp file to GC required location
-        shutil.copyfile(output_png_file, self._algorithm_output_thumbnail_path) #copy tmp file to GC required location
+        shutil.copyfile(output_png_file, str(self._algorithm_output_thumbnail_path)) #copy tmp file to GC required location
 
         # Write segmentation file to json.
         if output_image_path.exists():
             json_result = {"outputs": [dict(type="Image", slug="stroke-lesion-segmentation",
                                                  filename=str(output_image_path.name)),
                                        dict(type="Thumbnail", slug="stroke-lesion-segmentation-thumbnail",
-                                            filename=str(output_thumbnail_path.name))],
+                                            filename=str(self._algorithm_output_thumbnail_path))],
 
                                        "inputs": [dict(type="Image", slug="dwi-brain-mri",
                                            filename=input_filename)]}
