@@ -51,7 +51,7 @@ class predict():
             self._input_path = Path('/home/edelarosa/Documents/git/deepisles_gc/test/input')
             self._output_path = Path('/home/edelarosa/Documents/datasets/example_dwi/test_me_gc')
             self._algorithm_output_path = self._output_path / 'stroke-lesion-segmentation'
-            self._algorithm_output_thumbnail_path = self._output_path /'stroke-lesion-segmentation-thumbnail'
+            self._algorithm_output_thumbnail_path = self._output_path /'stroke-lesion-segmentation-thumbnail.png'
 
             self._output_file = self._output_path / 'results.json'
             self._case_results = []
@@ -131,14 +131,14 @@ class predict():
         output_image_path = (self._algorithm_output_path / input_filename).with_name(
             f"{Path(input_filename).stem}-msk.mha")
 
-        output_thumbnail_path = self._algorithm_output_thumbnail_path / 'output_screenshot.png'
+        #output_thumbnail_path = self._algorithm_output_thumbnail_path / 'stroke-lesion-segmentation-thumbnail.png'
 
         # export output as .mha
         image = sitk.ReadImage(output_msk_path)
         sitk.WriteImage(image, str(output_image_path))
 
         #shutil.copyfile(output_msk_path, output_image_path) #copy tmp file to GC required location
-        shutil.copyfile(output_png_file, output_thumbnail_path) #copy tmp file to GC required location
+        shutil.copyfile(output_png_file, self._algorithm_output_thumbnail_path) #copy tmp file to GC required location
 
         # Write segmentation file to json.
         if output_image_path.exists():
