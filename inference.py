@@ -86,12 +86,13 @@ class predict():
             weights_dir = os.path.join(os.getcwd(), 'test', 'opt', 'ml', 'model', 'weights')
         else:
             weights_dir = os.path.join(str(MODEL_PATH), 'weights')
+        print("cwd:", os.getcwd())
         stroke_segm.predict_ensemble(ensemble_path=PATH_DEEPISLES,
                                      input_dwi_path=str(dwi_image_path),
                                      input_adc_path=str(adc_image_path),
                                      input_flair_path=str(flair_image_path),
                                      output_path=deepisles_out_path,
-                                     fast=False,
+                                     fast=True, # todo modify!
                                      save_team_outputs=False,
                                      skull_strip=skull_strip,
                                      results_mni=False,
