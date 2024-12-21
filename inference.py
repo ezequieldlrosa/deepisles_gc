@@ -33,37 +33,32 @@ sys.path.append(PATH_DEEPISLES)
 from DeepIsles.src.isles22_ensemble import IslesEnsemble
 
 
-#INPUT_PATH = Path("/input")
-#OUTPUT_PATH = Path("/output")
+INPUT_PATH = Path("/input")
+OUTPUT_PATH = Path("/output")
 MODEL_PATH = Path("/opt/ml/model")
 
-DEFAULT_INPUT_PATH = Path("/input")
-DEFAULT_ALGORITHM_OUTPUT_IMAGES_PATH = Path("/output/images/")
-DEFAULT_ALGORITHM_OUTPUT_FILE_PATH = Path("/output/results.json")
+#DEFAULT_ALGORITHM_OUTPUT_IMAGES_PATH = Path("/output/images/")
+#DEFAULT_ALGORITHM_OUTPUT_FILE_PATH = Path("/output/results.json")
 
 class predict():
     def __init__(self,
-                 input_path: Path = DEFAULT_INPUT_PATH,
-                 output_path: Path = DEFAULT_ALGORITHM_OUTPUT_IMAGES_PATH):
+                 input_path: Path = INPUT_PATH,
+                 output_path: Path = OUTPUT_PATH):
 
         self.debug = False  # False for running the docker!
+
         if self.debug:
             self._input_path = Path('/home/edelarosa/Documents/git/deepisles_gc/test/input')
-            self._output_path = Path('/home/edelarosa/Documents/datasets/example_dwi/test_me_gc')
-            self._algorithm_output_path = self._output_path / 'stroke-lesion-segmentation'
-            self._algorithm_output_thumbnail_path = self._output_path /'stroke-lesion-segmentation-thumbnail.png'
-
-            self._output_file = self._output_path / 'results.json'
+            output_path = Path('/home/edelarosa/Documents/datasets/example_dwi/test_me_gc/output')
             self._case_results = []
 
         else:
             self._input_path = input_path
-            self._output_path = output_path
-            self._algorithm_output_path = self._output_path / 'stroke-lesion-segmentation'
-            self._algorithm_output_thumbnail_path = self._output_path /'stroke-lesion-segmentation-thumbnail.png'
-
-            self._output_file = DEFAULT_ALGORITHM_OUTPUT_FILE_PATH
             self._case_results = []
+
+        self._output_path = output_path
+        self._output_file = self._output_path / 'results.json'
+        self._algorithm_output_path = output_path / 'images'/ 'stroke-lesion-segmentation'
 
     def predict(self, input_data_paths):
         """
@@ -113,39 +108,31 @@ class predict():
     def process_isles_case(self, input_data_paths, input_filename):
 
         # Segment images.
-        output_msk_path, output_png_file = self.predict(input_data_paths) # TODO check if .nii outputs are ok
-
-        # origin, spacing, direction = input_data_paths['dwi_image'].GetOrigin(),\
-        #                              input_data_paths['dwi_image'].GetSpacing(),\
-        #                              input_data_paths['dwi_image'].GetDirection()
-
-        # Build the itk object.
-        # output_image = SimpleITK.GetImageFromArray(prediction)
-        # output_image.SetOrigin(origin), output_image.SetSpacing(spacing), output_image.SetDirection(direction)
+        msk_path, png_path = self.predict(input_data_paths) # TODO check if .nii outputs are ok
 
         # Write segmentation to output location.
         if not self._algorithm_output_path.exists():
             os.makedirs(str(self._algorithm_output_path))
-            os.makedirs(str(self._algorithm_output_thumbnail_path))
 
-        output_image_path = (self._algorithm_output_path / input_filename).with_name(
+        output_msk_path = (self._algorithm_output_path / input_filename).with_name(
             f"{Path(input_filename).stem}-msk.mha")
 
         #output_thumbnail_path = self._algorithm_output_thumbnail_path / 'stroke-lesion-segmentation-thumbnail.png'
 
         # export output as .mha
-        image = sitk.ReadImage(output_msk_path)
-        sitk.WriteImage(image, str(output_image_path))
+        image = sitk.ReadImage(msk_path)
+        sitk.WriteImage(image, str(output_msk_path))
 
         #shutil.copyfile(output_msk_path, output_image_path) #copy tmp file to GC required location
-        shutil.copyfile(output_png_file, str(self._algorithm_output_thumbnail_path)) #copy tmp file to GC required location
+        output_png_path = self._output_path / "stroke-lesion-segmentation-thumbnail.png"
+        shutil.copyfile(png_path, output_png_path ) #copy tmp file to GC required location
 
-        # Write segmentation file to json.
-        if output_image_path.exists():
+        # # Write segmentation file to json.
+        if output_msk_path.exists():
             json_result = {"outputs": [dict(type="Image", slug="stroke-lesion-segmentation",
-                                                 filename=str(output_image_path.name)),
+                                                 filename=str(output_msk_path.name)),
                                        dict(type="Thumbnail", slug="stroke-lesion-segmentation-thumbnail",
-                                            filename=str(self._algorithm_output_thumbnail_path))],
+                                            filename=str(output_png_path))],
 
                                        "inputs": [dict(type="Image", slug="dwi-brain-mri",
                                            filename=input_filename)]}
