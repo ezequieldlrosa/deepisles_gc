@@ -92,7 +92,7 @@ class predict():
                                      input_adc_path=str(adc_image_path),
                                      input_flair_path=str(flair_image_path),
                                      output_path=deepisles_out_path,
-                                     fast=False, # todo modify!
+                                     fast=False,
                                      save_team_outputs=False,
                                      skull_strip=skull_strip,
                                      results_mni=False,
